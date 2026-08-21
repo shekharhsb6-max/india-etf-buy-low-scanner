@@ -513,7 +513,11 @@ def scan():
         if c not in ("ScanDate","Symbol","ISIN","Underlying","AssetClass","Signal","Reason","DMA200_Rising"):
             df[c] = pd.to_numeric(df[c],errors="coerce").round(2)
 
-       write_sheet(daily, df)
+          write_sheet(daily, df)
+
+    refresh = datetime.now(
+        ZoneInfo("Asia/Kolkata")
+    ).strftime("%d-%m-%Y %H:%M:%S")
 
     dashboard.update(
         [[refresh]],
