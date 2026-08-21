@@ -1173,11 +1173,11 @@ def scan():
     # NAV
     # --------------------------------------------------------
 
-    print("Reading NAV from source sheet...")
+   print("Reading NAV from current spreadsheet NAV sheet...")
     nav_map = read_nav_source(
-        gspread.authorize(credentials())
-    )
-
+    gc,
+    ss
+)
     nav_count = update_destination_nav(
         gspread.authorize(credentials()),
         nav_ws,
