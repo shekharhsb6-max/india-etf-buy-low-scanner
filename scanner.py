@@ -188,11 +188,29 @@ def write_values(ws, range_name, values):
 # NAV SOURCE — NO AMFI FETCH
 # ============================================================
 
-def read_nav_source(gc):
-    source_ss = gc.open_by_key(NAV_SOURCE_SPREADSHEET_ID)
-    source_ws = source_ss.worksheet(NAV_SOURCE_SHEET)
+def read_nav_source(gc, spreadsheet):
+    """
+    Read NAV data from the NAV sheet in the CURRENT spreadsheet.
 
-    values = source_ws.get_all_values()
+    NAV sheet:
+        A = Symbol
+        B = ISIN
+        C = NAV
+
+    NAV itself is supplied by IMPORTRANGE in Google Sheets.
+    Python does NOT fetch NAV from AMFI or the source spreadsheet.
+    """
+
+    print("Reading NAV from current spreadsheet NAV sheet...")
+
+    try:
+        nav_ws = spreadsheet.worksheet("NAV")
+    except Exception as e:
+        raise RuntimeError(
+            'NAV sheet was not found in the current spreadsheet.'
+        ) from e
+
+    values = nav_ws.get_all_values()
 
     if not values:
         return {}
@@ -200,24 +218,24 @@ def read_nav_source(gc):
     nav_map = {}
 
     for row in values[1:]:
-        if len(row) < 8:
+        if len(row) < 3:
             continue
 
         symbol = str(row[0]).strip().upper()
-        isin = str(row[5]).strip().upper()
-        raw_nav = str(row[7]).strip()
+        isin = str(row[1]).strip().upper()
+        nav_raw = str(row[2]).strip()
 
         if not symbol:
             continue
 
         nav = None
 
-        if raw_nav:
+        if nav_raw:
             try:
                 nav = float(
-                    raw_nav.replace(",", "")
+                    nav_raw
+                    .replace(",", "")
                     .replace("₹", "")
-                    .strip()
                 )
             except ValueError:
                 nav = None
@@ -225,36 +243,12 @@ def read_nav_source(gc):
         nav_map[symbol] = {
             "symbol": symbol,
             "isin": isin,
-            "nav": nav,
+            "nav": nav
         }
 
+    print(f"NAV records loaded: {len(nav_map)}")
+
     return nav_map
-
-
-def update_destination_nav(gc, nav_ws, nav_map):
-    rows = [
-        ["Symbol", "ISINNumber", "NAV"]
-    ]
-
-    for symbol in sorted(nav_map):
-        item = nav_map[symbol]
-        rows.append([
-            item["symbol"],
-            item["isin"],
-            "" if item["nav"] is None else item["nav"],
-        ])
-
-    nav_ws.clear()
-
-    nav_ws.update(
-        rows,
-        "A1",
-        value_input_option="USER_ENTERED",
-    )
-
-    return len(rows) - 1
-
-
 # ============================================================
 # DASHBOARD CAPITAL
 # ============================================================
