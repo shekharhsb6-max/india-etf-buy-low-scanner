@@ -385,10 +385,9 @@ def write_allocation_settings(settings, allocations):
     for key, value in allocations.items():
         rows.append([key, value])
 
-    # Only create/update allocation area.
-    settings.get_range(
-        1, 1, max(settings.get_last_row(), len(rows)), 2
-    ).clear_content()
+    # Only clear the allocation area. Do not overwrite other SETTINGS data.
+    clear_rows = max(len(rows), 1)
+    settings.batch_clear([f"A1:B{clear_rows}"])
 
     settings.update(
         rows,
