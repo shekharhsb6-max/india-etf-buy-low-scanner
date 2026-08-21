@@ -514,7 +514,11 @@ def scan():
             df[c] = pd.to_numeric(df[c],errors="coerce").round(2)
 
     write_sheet(daily,df)
-    dashboard.update("B6",refresh)
+   dashboard.update(
+    [[refresh]],
+    "B6",
+    value_input_option="USER_ENTERED"
+)
     write_excluded(excluded_ws,excluded,scan_date)
     append_history(history,df)
 
@@ -531,7 +535,11 @@ def write_sheet(sheet, df):
     data = df.replace([np.inf,-np.inf],np.nan).fillna("")
     values = [data.columns.tolist()] + data.values.tolist()
     sheet.clear()
-    sheet.update("A1",values,value_input_option="USER_ENTERED")
+    sheet.update(
+    values,
+    "A1",
+    value_input_option="USER_ENTERED"
+)
 
 def write_excluded(sheet, df, scan_date):
     out = df.copy()
