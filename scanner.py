@@ -46,9 +46,11 @@ from google.oauth2.service_account import Credentials
 # CONFIGURATION
 # ============================================================
 
-DESTINATION_SPREADSHEET_ID = os.getenv(
+import os
+
+DESTINATION_SPREADSHEET_ID = os.environ.get(
     "GOOGLE_SHEET_ID",
-    "1iMFuhNvKUpQpQoUMZaMntEhqiQpx9MOM-8NzxGip7I8"
+    "1iMFuhNvKUpQpQoUMZaMntEhqiQpx9MOM-8Nzxgip7I8"
 )
 
 NAV_SOURCE_SPREADSHEET_ID = (
