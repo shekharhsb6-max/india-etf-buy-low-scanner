@@ -2,10 +2,10 @@ name: ETF Buy-Low Scanner
 
 on:
   workflow_dispatch:
+
   schedule:
-    # 16:30 IST = 11:00 UTC, Monday-Friday.
-    # GitHub Actions scheduled jobs can start a few minutes late.
-    - cron: '0 11 * * 1-5'
+    # 16:30 IST = 11:00 UTC, Monday-Friday
+    - cron: "0 11 * * 1-5"
 
 jobs:
   scan:
@@ -18,7 +18,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Install dependencies
         run: |
@@ -29,4 +29,5 @@ jobs:
         env:
           GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
-        run: python scanner.py
+        run: |
+          python scanner.py
