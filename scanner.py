@@ -39,8 +39,7 @@ from google.oauth2.service_account import Credentials
 # CONFIGURATION
 # ============================================================
 
-DESTINATION_SPREADSHEET_ID = os.getenv(
-    "GOOGLE_SHEET_ID",
+DESTINATION_SPREADSHEET_ID = (
     "1iMFuhNvKUpQpQoUMZaMntEhqiQpx9MOM-8NzxGip7I8"
 )
 
