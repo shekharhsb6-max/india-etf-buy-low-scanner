@@ -1,0 +1,34 @@
+name: India ETF Buy-Low Scanner
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 3:35 PM IST, Monday-Friday = 10:05 UTC
+    # Kept away from the top of the hour to reduce GitHub scheduling delays.
+    - cron: "5 10 * * 1-5"
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run ETF scanner
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: python scanner.py
