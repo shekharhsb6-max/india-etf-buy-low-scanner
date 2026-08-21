@@ -513,12 +513,13 @@ def scan():
         if c not in ("ScanDate","Symbol","ISIN","Underlying","AssetClass","Signal","Reason","DMA200_Rising"):
             df[c] = pd.to_numeric(df[c],errors="coerce").round(2)
 
-    write_sheet(daily,df)
-   dashboard.update(
-    [[refresh]],
-    "B6",
-    value_input_option="USER_ENTERED"
-)
+       write_sheet(daily, df)
+
+    dashboard.update(
+        [[refresh]],
+        "B6",
+        value_input_option="USER_ENTERED"
+    )
     write_excluded(excluded_ws,excluded,scan_date)
     append_history(history,df)
 
